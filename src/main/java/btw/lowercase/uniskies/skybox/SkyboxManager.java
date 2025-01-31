@@ -21,8 +21,13 @@
 
 package btw.lowercase.uniskies.skybox;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class SkyboxManager {
     private static SkyboxManager instance = null;
+
+    private final List<Skybox> skyboxes;
 
     public SkyboxManager() {
         if (instance != null) {
@@ -30,13 +35,22 @@ public class SkyboxManager {
         }
 
         instance = this;
+        this.skyboxes = new ArrayList<>();
+    }
+
+    private void parse() {
+
+    }
+
+    public void load() {
+        this.skyboxes.clear();
     }
 
     public static SkyboxManager getInstance() {
         return instance;
     }
 
-    public void load() {
-
+    public List<Skybox> getSkyboxes() {
+        return this.skyboxes;
     }
 }

@@ -21,5 +21,15 @@
 
 package btw.lowercase.uniskies.skybox;
 
-public class Skybox {
+import btw.lowercase.uniskies.util.Blend;
+import net.minecraft.resources.ResourceLocation;
+import org.joml.Vector3d;
+
+public record Skybox(
+        int fadeInDuration, int fadeOutDuration,
+        Vector3d axis,
+        ResourceLocation textureLocation,
+        Blend blend,
+        boolean rotate
+) {
 }
