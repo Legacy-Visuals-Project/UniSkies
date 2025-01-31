@@ -72,12 +72,6 @@ public record Skybox(
             rotate = primitive.getAsBoolean();
         }
 
-        return new Skybox(
-                fadeInDuration, fadeOutDuration,
-                axis,
-                texture,
-                blend,
-                rotate
-        );
+        return new Skybox(fadeInDuration, fadeOutDuration, axis, texture, blend, rotate);
     }
 }

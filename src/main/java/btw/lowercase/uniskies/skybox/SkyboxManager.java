@@ -38,12 +38,9 @@ public class SkyboxManager {
         this.skyboxes = new ArrayList<>();
     }
 
-    private void parse() {
-
-    }
-
     public void load() {
         this.skyboxes.clear();
+        // TODO
     }
 
     public static SkyboxManager getInstance() {
