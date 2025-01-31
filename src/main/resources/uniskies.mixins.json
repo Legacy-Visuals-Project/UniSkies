@@ -1,0 +1,11 @@
+{
+	"required": true,
+	"package": "btw.lowercase.uniskies.mixins",
+	"compatibilityLevel": "JAVA_21",
+	"client": [
+		"MixinLevelRenderer"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

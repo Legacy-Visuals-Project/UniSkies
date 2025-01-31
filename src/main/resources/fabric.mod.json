@@ -1,0 +1,38 @@
+{
+	"schemaVersion": 1,
+	"id": "uniskies",
+	"version": "${version}",
+	"name": "UniSkies",
+	"description": "A skybox mod made for Fabric, intended for OptiFine/MCPatcher based skybox packs.",
+	"authors": [
+		"lowercasebtw"
+	],
+	"contact": {
+		"sources": "https://github.com/Legacy-Visuals-Project/UniSkies/",
+		"issues": "https://github.com/Legacy-Visuals-Project/UniSkies/issues"
+	},
+	"license": "GPL-3.0",
+	"icon": "assets/uniskies/icon.png",
+	"environment": "client",
+	"entrypoints": {
+		"client": [
+			"btw.lowercase.uniskies.UniSkies"
+		]
+	},
+	"custom": {
+		"modmenu": {
+			"links": {
+				"modmenu.discord": "https://discord.gg/U48eDmst68"
+			},
+			"update_checker": true
+		}
+	},
+	"mixins": [
+		"uniskies.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.16.7",
+		"minecraft": ">=1.21.4 <1.21.5",
+		"fabric-api": "*"
+	}
+}

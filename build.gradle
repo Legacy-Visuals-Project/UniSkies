@@ -1,0 +1,82 @@
+plugins {
+    id 'fabric-loom' version '1.9-SNAPSHOT'
+    id 'maven-publish'
+    id "com.diffplug.spotless" version "7.0.2"
+}
+
+version = "${project.mod_version}-${getCheckedOutGitCommitHash()}"
+group = project.maven_group
+
+base {
+    archivesName = project.archives_base_name
+}
+
+static def getCheckedOutGitCommitHash() {
+    'git rev-parse --verify --short HEAD'.execute().text.trim()
+}
+
+repositories {
+    maven { url = "https://maven.terraformersmc.com/" }
+}
+
+dependencies {
+    // To change the versions see the gradle.properties file
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    mappings loom.officialMojangMappings()
+    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+
+    // Fabric API - Needs to be specified, otherwise an older version might be defaulted and cause issues.
+    modImplementation("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}")
+
+    // Mod Menu
+    modImplementation("com.terraformersmc:modmenu:${project.modmenu_version}")
+}
+
+processResources {
+    inputs.property "version", project.version
+    filesMatching("fabric.mod.json") {
+        expand "version": project.version
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    it.options.release = 21
+}
+
+java {
+    withSourcesJar()
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
+jar {
+    from("LICENSE") {
+        rename { "${it}_${project.base.archivesName.get()}" }
+    }
+}
+
+// configure the maven publication
+publishing {
+    publications {
+        create("mavenJava", MavenPublication) {
+            artifactId = project.archives_base_name
+            from components.java
+        }
+    }
+
+    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
+    repositories {
+    }
+}
+
+// Header
+spotless {
+    def licenseHeader = rootProject.file("HEADER")
+    java {
+        licenseHeaderFile(licenseHeader)
+    }
+
+    kotlin {
+        licenseHeaderFile(licenseHeader)
+    }
+}
