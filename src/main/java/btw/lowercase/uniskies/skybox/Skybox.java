@@ -26,31 +26,35 @@ import btw.lowercase.uniskies.util.Util;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3d;
 
 public record Skybox(
-        int fadeInDuration, int fadeOutDuration,
+        int startFadeInDuration, int endFadeInDuration,
+        int startFadeOutDuration, int endFadeOutDuration,
         Vector3d axis,
         String texture,
         Blend blend,
         boolean rotate
 ) {
-    @Nullable
-    public static Skybox parse(String input) {
-        JsonObject properties = Util.parseProperties(input);
-        if (properties == null) {
-            return null;
+    public static Skybox load(JsonObject properties) {
+        int startFadeInDuration = -1;
+        if (properties.has("startFadeIn") && properties.get("startFadeIn") instanceof JsonPrimitive primitive && primitive.isString()) {
+            startFadeInDuration = 0; // TODO: primitive.getAsInt();
         }
 
-        int fadeInDuration = -1;
-        if (properties.has("fadeInDuration") && properties.get("fadeInDuration") instanceof JsonPrimitive primitive) {
-            fadeInDuration = primitive.getAsInt();
+        int endFadeInDuration = -1;
+        if (properties.has("endFadeIn") && properties.get("endFadeIn") instanceof JsonPrimitive primitive && primitive.isString()) {
+            endFadeInDuration = 0; // TODO: primitive.getAsInt();
         }
 
-        int fadeOutDuration = -1;
-        if (properties.has("fadeOutDuration") && properties.get("fadeOutDuration") instanceof JsonPrimitive primitive) {
-            fadeOutDuration = primitive.getAsInt();
+        int startFadeOutDuration = -1;
+        if (properties.has("startFadeOut") && properties.get("startFadeOut") instanceof JsonPrimitive primitive && primitive.isString()) {
+            startFadeOutDuration = 0; // TODO: primitive.getAsInt();
+        }
+
+        int endFadeOutDuration = -1;
+        if (properties.has("endFadeOut") && properties.get("endFadeOut") instanceof JsonPrimitive primitive && primitive.isString()) {
+            endFadeOutDuration = 0; // TODO: primitive.getAsInt();
         }
 
         Vector3d axis = new Vector3d(0.0, 0.0, 1.0);
@@ -76,6 +80,6 @@ public record Skybox(
             rotate = primitive.getAsBoolean();
         }
 
-        return new Skybox(fadeInDuration, fadeOutDuration, axis, texture, blend, rotate);
+        return new Skybox(startFadeInDuration, endFadeInDuration, startFadeOutDuration, endFadeOutDuration, axis, texture, blend, rotate);
     }
 }

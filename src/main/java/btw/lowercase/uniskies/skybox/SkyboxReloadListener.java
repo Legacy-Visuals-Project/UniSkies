@@ -23,14 +23,15 @@ package btw.lowercase.uniskies.skybox;
 
 import btw.lowercase.uniskies.UniSkies;
 import btw.lowercase.uniskies.util.Util;
+import com.google.gson.JsonObject;
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -40,24 +41,36 @@ public class SkyboxReloadListener implements IdentifiableResourceReloadListener 
     @Override
     public @NotNull CompletableFuture<Void> reload(PreparationBarrier preparationBarrier, ResourceManager resourceManager, Executor executor, Executor executor2) {
         return CompletableFuture.runAsync(() -> {
-            List<Skybox> skyboxes = SkyboxManager.getInstance().getSkyboxes();
+            Map<String, List<Skybox>> skyboxes = SkyboxManager.getInstance().getSkyboxes();
             skyboxes.clear();
 
-            Map<ResourceLocation, Resource> resources = resourceManager.listResources("optifine/sky", (resourceLocation) -> resourceLocation.getPath().endsWith(".properties"));
+            Map<ResourceLocation, Resource> resources = resourceManager.listResources(UniSkies.getSkyPath(), (resourceLocation) -> resourceLocation.getPath().endsWith(".properties"));
             for (var entry : resources.entrySet()) {
+                String path = entry.getKey().getPath();
+                path = path.substring(UniSkies.getSkyPath().length() + 1, path.length() - 1);
+                String world = path.split("/")[0];
                 try (InputStream inputStream = resourceManager.open(entry.getKey())) {
                     String input = Util.asString(inputStream.readAllBytes());
-                    Skybox skybox = Skybox.parse(input);
-                    if (skybox != null) {
-                        skyboxes.add(skybox);
+
+                    JsonObject properties = Util.parseProperties(input);
+                    if (properties == null) {
+                        throw new Exception("Failed to parse properties.");
                     }
-                } catch (IOException e) {
-                    System.err.println("Failed to load skybox " + entry.getKey() + "!");
+
+                    Skybox skybox = Skybox.load(properties);
+                    if (!skyboxes.containsKey(world)) {
+                        skyboxes.put(world, new ArrayList<>());
+                    }
+
+                    skyboxes.get(world).add(skybox);
+                } catch (Exception exception) {
+                    System.err.println("Failed to load skybox " + entry.getKey() + " for world " + world + "!");
+                    exception.printStackTrace();
                 }
             }
 
-            for (var skybox : skyboxes) {
-                System.out.println("Loaded skybox with texture: " + skybox.texture());
+            for (var entry : skyboxes.entrySet()) {
+                System.out.println("Loaded skybox in world " + entry.getKey() + " with " + entry.getValue().size() + " skyboxes");
             }
         }).thenCompose(preparationBarrier::wait);
     }

@@ -21,18 +21,58 @@
 
 package btw.lowercase.uniskies;
 
+import btw.lowercase.uniskies.skybox.Skybox;
 import btw.lowercase.uniskies.skybox.SkyboxManager;
+import com.mojang.brigadier.Command;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
 public class UniSkies implements ClientModInitializer {
+    private static final String SKY_PATH = "optifine/sky";
+
     @Override
     public void onInitializeClient() {
         SkyboxManager skyboxManager = new SkyboxManager();
         skyboxManager.setup();
+        ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
+            var command = ClientCommandManager.literal("uniskies");
+            command.executes((context) -> {
+                var skyboxes = skyboxManager.getSkyboxes();
+                if (!skyboxes.isEmpty()) {
+                    context.getSource().sendFeedback(Component.literal("Skyboxes loaded:").withStyle(ChatFormatting.GOLD));
+                    for (var entry : skyboxes.entrySet()) {
+                        context.getSource().sendFeedback(Component.literal("- World: " + entry.getKey()));
+                        int i = 0;
+                        for (Skybox skybox : entry.getValue()) {
+                            context.getSource().sendFeedback(Component.literal(" - " + i).withColor((int) Math.floor(Math.random() * 0xFFFFFF)));
+                            context.getSource().sendFeedback(Component.literal("  - startFadeInDuration: " + skybox.startFadeInDuration()));
+                            context.getSource().sendFeedback(Component.literal("  - endFadeInDuration: " + skybox.endFadeInDuration()));
+                            context.getSource().sendFeedback(Component.literal("  - startFadeOutDuration: " + skybox.startFadeOutDuration()));
+                            context.getSource().sendFeedback(Component.literal("  - endFadeOutDuration: " + skybox.endFadeOutDuration()));
+                            context.getSource().sendFeedback(Component.literal("  - texture: " + skybox.texture()));
+                            context.getSource().sendFeedback(Component.literal("  - blend: " + skybox.blend()));
+                            context.getSource().sendFeedback(Component.literal("  - rotate: " + skybox.rotate()));
+                            i++;
+                        }
+                    }
+                } else {
+                    context.getSource().sendFeedback(Component.literal("No skyboxes loaded.").withStyle(ChatFormatting.RED));
+                }
+                return Command.SINGLE_SUCCESS;
+            });
+            dispatcher.register(command);
+        });
     }
 
     public static ResourceLocation id(String path) {
         return ResourceLocation.fromNamespaceAndPath("uniskies", path);
+    }
+
+    public static String getSkyPath() {
+        return SKY_PATH;
     }
 }

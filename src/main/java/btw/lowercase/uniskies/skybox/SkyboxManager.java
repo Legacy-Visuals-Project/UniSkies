@@ -24,13 +24,14 @@ package btw.lowercase.uniskies.skybox;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.server.packs.PackType;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SkyboxManager {
     private static SkyboxManager instance = null;
 
-    private final List<Skybox> skyboxes;
+    private final Map<String, List<Skybox>> skyboxes;
 
     public SkyboxManager() {
         if (instance != null) {
@@ -38,7 +39,7 @@ public class SkyboxManager {
         }
 
         instance = this;
-        this.skyboxes = new ArrayList<>();
+        this.skyboxes = new HashMap<>();
     }
 
     public void setup() {
@@ -49,7 +50,7 @@ public class SkyboxManager {
         return instance;
     }
 
-    public List<Skybox> getSkyboxes() {
+    public Map<String, List<Skybox>> getSkyboxes() {
         return this.skyboxes;
     }
 }
