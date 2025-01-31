@@ -32,7 +32,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
 public class UniSkies implements ClientModInitializer {
-    private static final String SKY_PATH = "optifine/sky";
+    public static final String SKY_PATH = "optifine/sky";
+    public static final String OVERWORLD = "world0";
+    public static final String THE_END = "world1";
 
     @Override
     public void onInitializeClient() {
@@ -70,9 +72,5 @@ public class UniSkies implements ClientModInitializer {
 
     public static ResourceLocation id(String path) {
         return ResourceLocation.fromNamespaceAndPath("uniskies", path);
-    }
-
-    public static String getSkyPath() {
-        return SKY_PATH;
     }
 }

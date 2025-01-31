@@ -44,10 +44,10 @@ public class SkyboxReloadListener implements IdentifiableResourceReloadListener 
             Map<String, List<Skybox>> skyboxes = SkyboxManager.getInstance().getSkyboxes();
             skyboxes.clear();
 
-            Map<ResourceLocation, Resource> resources = resourceManager.listResources(UniSkies.getSkyPath(), (resourceLocation) -> resourceLocation.getPath().endsWith(".properties"));
+            Map<ResourceLocation, Resource> resources = resourceManager.listResources(UniSkies.SKY_PATH, (resourceLocation) -> resourceLocation.getPath().endsWith(".properties"));
             for (var entry : resources.entrySet()) {
                 String path = entry.getKey().getPath();
-                path = path.substring(UniSkies.getSkyPath().length() + 1, path.length() - 1);
+                path = path.substring(UniSkies.SKY_PATH.length() + 1, path.length() - 1);
                 String world = path.split("/")[0];
                 try (InputStream inputStream = resourceManager.open(entry.getKey())) {
                     String input = Util.asString(inputStream.readAllBytes());

@@ -26,6 +26,7 @@ import btw.lowercase.uniskies.util.Util;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import com.mojang.blaze3d.vertex.PoseStack;
 import org.joml.Vector3d;
 
 public record Skybox(
@@ -81,5 +82,18 @@ public record Skybox(
         }
 
         return new Skybox(startFadeInDuration, endFadeInDuration, startFadeOutDuration, endFadeOutDuration, axis, texture, blend, rotate);
+    }
+
+    public void render(PoseStack poseStack, float tickDelta) {
+        poseStack.pushPose();
+
+        // TODO
+
+        poseStack.popPose();
+    }
+
+    public boolean shouldAlwaysRender() {
+        return this.startFadeInDuration == -1 && this.startFadeOutDuration == -1 &&
+                this.endFadeInDuration == -1 && this.endFadeOutDuration == -1;
     }
 }
