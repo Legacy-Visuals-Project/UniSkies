@@ -30,6 +30,9 @@ dependencies {
 
     // Mod Menu
     modImplementation("com.terraformersmc:modmenu:${project.modmenu_version}")
+
+    // GSON
+    include("com.google.code.gson:gson:${project.gson_version}")
 }
 
 processResources {

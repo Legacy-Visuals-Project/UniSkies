@@ -22,14 +22,62 @@
 package btw.lowercase.uniskies.skybox;
 
 import btw.lowercase.uniskies.util.Blend;
-import net.minecraft.resources.ResourceLocation;
+import btw.lowercase.uniskies.util.Util;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3d;
 
 public record Skybox(
         int fadeInDuration, int fadeOutDuration,
         Vector3d axis,
-        ResourceLocation textureLocation,
+        String texture,
         Blend blend,
         boolean rotate
 ) {
+    @Nullable
+    public static Skybox parse(String input) {
+        JsonObject properties = Util.parseProperties(input);
+        if (properties == null) {
+            return null;
+        }
+
+        int fadeInDuration = -1;
+        if (properties.has("fadeInDuration") && properties.get("fadeInDuration") instanceof JsonPrimitive primitive) {
+            fadeInDuration = primitive.getAsInt();
+        }
+
+        int fadeOutDuration = -1;
+        if (properties.has("fadeOutDuration") && properties.get("fadeOutDuration") instanceof JsonPrimitive primitive) {
+            fadeOutDuration = primitive.getAsInt();
+        }
+
+        Vector3d axis = new Vector3d(0.0, 0.0, 1.0);
+        if (properties.has("axis") && properties.get("axis") instanceof JsonPrimitive primitive && primitive.isString()) {
+            // TODO;
+        }
+
+        String texture = null;
+        if (properties.has("source") && properties.get("source") instanceof JsonPrimitive primitive && primitive.isString()) {
+            texture = primitive.getAsString();
+        }
+
+        Blend blend = Blend.ADD;
+        if (properties.has("blend") && properties.get("blend") instanceof JsonPrimitive primitive && primitive.isString()) {
+            blend = Blend.byName(primitive.getAsString());
+        }
+
+        boolean rotate = true;
+        if (properties.has("rotate") && properties.get("rotate") instanceof JsonPrimitive primitive && primitive.isBoolean()) {
+            rotate = primitive.getAsBoolean();
+        }
+
+        return new Skybox(
+                fadeInDuration, fadeOutDuration,
+                axis,
+                texture,
+                blend,
+                rotate
+        );
+    }
 }

@@ -19,7 +19,7 @@ public enum Blend {
         this.name = name;
     }
 
-    static Blend byName(String input) {
-        return Arrays.stream(Blend.values()).filter(blend -> blend.name.equals(input)).findFirst().orElse(ADD);
+    public static Blend byName(String name) {
+        return Arrays.stream(Blend.values()).filter(blend -> blend.name.equals(name)).findFirst().orElse(ADD);
     }
 }
