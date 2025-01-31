@@ -23,11 +23,16 @@ package btw.lowercase.uniskies;
 
 import btw.lowercase.uniskies.skybox.SkyboxManager;
 import net.fabricmc.api.ClientModInitializer;
+import net.minecraft.resources.ResourceLocation;
 
 public class UniSkies implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         SkyboxManager skyboxManager = new SkyboxManager();
-        skyboxManager.load();
+        skyboxManager.setup();
+    }
+
+    public static ResourceLocation id(String path) {
+        return ResourceLocation.fromNamespaceAndPath("uniskies", path);
     }
 }

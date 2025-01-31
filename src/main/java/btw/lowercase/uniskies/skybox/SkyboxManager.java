@@ -21,6 +21,9 @@
 
 package btw.lowercase.uniskies.skybox;
 
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+import net.minecraft.server.packs.PackType;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,9 +41,8 @@ public class SkyboxManager {
         this.skyboxes = new ArrayList<>();
     }
 
-    public void load() {
-        this.skyboxes.clear();
-        // TODO
+    public void setup() {
+        ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(new SkyboxReloadListener());
     }
 
     public static SkyboxManager getInstance() {

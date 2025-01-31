@@ -23,6 +23,7 @@ package btw.lowercase.uniskies.skybox;
 
 import btw.lowercase.uniskies.util.Blend;
 import btw.lowercase.uniskies.util.Util;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import org.jetbrains.annotations.Nullable;
@@ -54,7 +55,10 @@ public record Skybox(
 
         Vector3d axis = new Vector3d(0.0, 0.0, 1.0);
         if (properties.has("axis") && properties.get("axis") instanceof JsonPrimitive primitive && primitive.isString()) {
-            // TODO;
+            JsonArray array = Util.parseArray(primitive.getAsString());
+            if (array != null && array.size() == 3) {
+                // TODO;
+            }
         }
 
         String texture = null;

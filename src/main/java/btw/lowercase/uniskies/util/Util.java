@@ -35,22 +35,38 @@ public class Util {
         }
 
         JsonObject object = new JsonObject();
-        for (String line : input.split("\n")) {
+        input.lines().forEach(line -> {
             String[] parts = line.split("=");
-            if (parts.length < 2) {
-                continue;
+            if (parts.length >= 2) {
+                String key = parts[0];
+                String value = Arrays.toString(Arrays.copyOfRange(parts, 1, parts.length));
+                object.addProperty(key, value.substring(1, value.length() - 1));
             }
-
-            String value = parts[parts.length - 1];
-            String key = Arrays.toString(Arrays.copyOfRange(parts, 0, parts.length - 1));
-            object.addProperty(key, value);
-        }
+        });
 
         return object;
     }
 
     @Nullable
     public static JsonArray parseArray(String input) {
-        return null;
+        if (input.isEmpty()) {
+            return null;
+        }
+
+        JsonArray array = new JsonArray();
+        for (String part : input.split(" ")) {
+            array.add(part);
+        }
+
+        return array;
+    }
+
+    public static String asString(byte[] bytes) {
+        StringBuilder builder = new StringBuilder();
+        for (byte it : bytes) {
+            builder.appendCodePoint(it);
+        }
+
+        return builder.toString();
     }
 }
